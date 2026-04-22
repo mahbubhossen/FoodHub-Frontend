@@ -44,7 +44,11 @@ export function DashboardSidebar() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const user = session?.user as { role: string; name?: string; image?: string };
+  const user = session?.user as unknown as {
+    role: string;
+    name?: string;
+    image?: string;
+  };
 
   const links =
     user?.role === "ADMIN"
