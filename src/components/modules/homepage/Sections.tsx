@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ROUTES } from "@/constants";
-import { CategoryService, MealService, ProviderService } from "@/services/api.service";
+import { CategoryService, MealService, ProviderService } from "@/services/api.services";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, Clock, Search, Star, Truck, UtensilsCrossed } from "lucide-react";
 import Image from "next/image";
@@ -116,7 +116,7 @@ export function CategoriesSection() {
         <div className="mb-10 text-center">
           <h2 className="text-2xl font-bold md:text-3xl">Browse by Category</h2>
           <p className="mt-2 text-muted-foreground">
-            Find exactly what you're craving
+            Find exactly what you&apos;re craving
           </p>
         </div>
 
@@ -364,7 +364,7 @@ export function TestimonialsSection() {
                     <Star key={j} className="h-4 w-4 fill-orange-400 text-orange-400" />
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">"{t.text}"</p>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">
                     {t.avatar}

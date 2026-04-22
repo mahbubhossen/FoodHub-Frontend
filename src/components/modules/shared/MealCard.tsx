@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ROUTES } from "@/constants";
 import { useSession } from "@/lib/auth-client";
 import { formatPrice, getDietaryTagsArray } from "@/lib/utils";
-import { CartService } from "@/services/api.service";
+import { CartService } from "@/services/api.services";
 import { Meal } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ShoppingCart, Star } from "lucide-react";
@@ -21,7 +21,7 @@ interface MealCardProps {
 
 export function MealCard({ meal, showProvider = true }: MealCardProps) {
   const { data: session } = useSession();
-  const user = session?.user as any;
+  const user = session?.user;
   const qc = useQueryClient();
 
   const { mutate: addToCart, isPending } = useMutation({
