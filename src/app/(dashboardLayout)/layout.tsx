@@ -1,10 +1,10 @@
 "use client";
 
-import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 
 export default function DashboardLayout({
   children,
