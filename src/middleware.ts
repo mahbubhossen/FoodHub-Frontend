@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/auth-client";
+import { getSafeSession } from "@/lib/auth-session";
 import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_PATHS = ["/", "/meals", "/login", "/register", "/providers"];
@@ -23,13 +23,16 @@ export async function middleware(req: NextRequest) {
   }
 
   // Fetch session from better-auth
-  const session = await getSession({
-    fetchOptions: {
-      headers: { cookie: req.headers.get("cookie") ?? "" },
-    },
-  });
 
-  const user = session?.data?.user as any;
+  const session = await getSafeSession(req);
+
+  if (!session) {
+    const loginUrl = req.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const user = session.user;
 
   // Not logged in → redirect to login
   if (!user) {

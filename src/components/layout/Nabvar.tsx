@@ -3,38 +3,44 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-    Sheet,
-    SheetContent,
-    SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ROUTES } from "@/constants";
 import { useCartCount } from "@/hooks/useCartCount";
 import { signOut, useSession } from "@/lib/auth-client";
 import { getInitials } from "@/lib/utils";
-import { ChefHat, LayoutDashboard, LogOut, Menu, Moon, ShoppingCart, Sun, User } from "lucide-react";
+import type { SessionUser } from "@/types/auth";
+import {
+  ChefHat,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Moon,
+  HdIcon as Profile,
+  ShoppingCart,
+  Sun,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 const NAV_LINKS = [
-  { href: ROUTES.HOME,   label: "Home"      },
-  { href: ROUTES.MEALS,  label: "Browse Meals" },
+  { href: ROUTES.HOME, label: "Home" },
+  { href: ROUTES.MEALS, label: "Browse Meals" },
 ];
 
 export function Navbar() {
   const { data: session, isPending } = useSession();
   const { theme, setTheme } = useTheme();
   const router = useRouter();
-  const user = session?.user;
-  const cartCount = useCartCount(!!user && (user as any)?.role === "CUSTOMER");
+  const user = session?.user as SessionUser | undefined;
+  const cartCount = useCartCount(!!user && user?.role === "CUSTOMER");
 
   const handleSignOut = async () => {
     await signOut();
@@ -44,16 +50,20 @@ export function Navbar() {
   };
 
   const dashboardRoute =
-    user?.role === "ADMIN"    ? ROUTES.ADMIN_DASH    :
-    user?.role === "PROVIDER" ? ROUTES.PROVIDER_DASH :
-                                ROUTES.ORDERS;
+    user?.role === "ADMIN"
+      ? ROUTES.ADMIN_DASH
+      : user?.role === "PROVIDER"
+        ? ROUTES.PROVIDER_DASH
+        : ROUTES.ORDERS;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-
         {/* Logo */}
-        <Link href={ROUTES.HOME} className="flex items-center gap-2 font-bold text-xl">
+        <Link
+          href={ROUTES.HOME}
+          className="flex items-center gap-2 font-bold text-xl"
+        >
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <ChefHat className="h-5 w-5" />
           </span>
@@ -83,7 +93,7 @@ export function Navbar() {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label="Toggle theme"
           >
-            <Sun  className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
           </Button>
 
@@ -104,7 +114,10 @@ export function Navbar() {
           {isPending ? null : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-9 w-9 rounded-full"
+                >
                   <Avatar className="h-9 w-9">
                     <AvatarImage src={user.image} alt={user.name} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs font-semibold">
@@ -116,7 +129,9 @@ export function Navbar() {
               <DropdownMenuContent align="end" className="w-52">
                 <div className="px-2 py-1.5">
                   <p className="text-sm font-semibold truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {user.email}
+                  </p>
                   <span className="mt-1 inline-flex items-center rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
                     {user.role}
                   </span>
@@ -130,7 +145,7 @@ export function Navbar() {
                 {user.role === "CUSTOMER" && (
                   <DropdownMenuItem asChild>
                     <Link href={ROUTES.PROFILE} className="cursor-pointer">
-                      <User className="mr-2 h-4 w-4" /> Profile
+                      <Profile className="mr-2 h-4 w-4" /> Profile
                     </Link>
                   </DropdownMenuItem>
                 )}
@@ -174,8 +189,12 @@ export function Navbar() {
                 ))}
                 {!user && (
                   <div className="flex flex-col gap-2 mt-4">
-                    <Button variant="outline" asChild><Link href={ROUTES.LOGIN}>Login</Link></Button>
-                    <Button asChild><Link href={ROUTES.REGISTER}>Sign Up</Link></Button>
+                    <Button variant="outline" asChild>
+                      <Link href={ROUTES.LOGIN}>Login</Link>
+                    </Button>
+                    <Button asChild>
+                      <Link href={ROUTES.REGISTER}>Sign Up</Link>
+                    </Button>
                   </div>
                 )}
               </div>
