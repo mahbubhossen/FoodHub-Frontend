@@ -7,9 +7,14 @@ const nextConfig: NextConfig = {
       { protocol: "http", hostname: "localhost" },
     ],
   },
+
   async rewrites() {
-    // Proxy /api/auth/* to better-auth handler (same origin, no-op in dev)
-    return [];
+    return [
+      {
+        source: "/api/:path*",
+        destination: "https://foodhub-backend-ytu3.onrender.com/api/:path*",
+      },
+    ];
   },
 };
 

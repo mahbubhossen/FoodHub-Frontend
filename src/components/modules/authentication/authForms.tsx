@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ROUTES } from "@/constants";
-import { signIn, signUp } from "@/lib/auth-client";
+import { signIn, signUp, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, ChefHat, Eye, EyeOff, Loader2 } from "lucide-react";
@@ -22,6 +22,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+
 
 // ─── Google Icon SVG ────────────────────────────────────────────────────────
 
@@ -115,6 +117,10 @@ export function LoginForm() {
       setGoogleLoading(false);
     }
   };
+
+  const { data: session } = useSession();
+
+console.log("SESSION:", session);
 
   return (
     <Card className="w-full max-w-md border-border/60 shadow-xl shadow-black/5">
