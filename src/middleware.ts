@@ -47,6 +47,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  console.log("COOKIE:", req.headers.get("cookie"));
+
   const role: string = user.role ?? "CUSTOMER";
 
   // Provider must complete profile before accessing dashboard

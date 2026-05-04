@@ -1,4 +1,3 @@
-import { getSession } from "@/lib/auth-client";
 import type { SessionUser } from "@/types/auth";
 
 type BetterAuthSession = {
@@ -6,22 +5,30 @@ type BetterAuthSession = {
 } | null;
 
 export async function getSafeSession(req: Request): Promise<BetterAuthSession> {
-  const result = await getSession({
-    fetchOptions: {
+  try {
+    // 🔥 IMPORTANT: call via NEXT.js proxy (NOT backend directly)
+    const res = await fetch("http://localhost:3000/api/auth/get-session", {
+      method: "GET",
       headers: {
-        cookie: req.headers.get("cookie") ?? "",
+        cookie: req.headers.get("cookie") || "",
       },
-    },
-  });
+    });
 
-  console.log("SESSION RESULT 👉", result);
+    const data = await res.json();
 
-  // ❗ important: check result.data
-  if (!result || "error" in result || !result.data) {
+    console.log("SESSION RESULT 👉", data);
+
+    // ❌ no session case
+    if (!data || !data.user) {
+      return null;
+    }
+
+    // ✅ return normalized session
+    return {
+      user: data.user as SessionUser,
+    };
+  } catch (error) {
+    console.log("SESSION ERROR 👉", error);
     return null;
   }
-
-  return {
-    user: result.data.user as SessionUser,
-  };
 }
