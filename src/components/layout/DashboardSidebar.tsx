@@ -31,6 +31,8 @@ const PROVIDER_LINKS = [
   { href: ROUTES.PROVIDER_DASH, label: "Dashboard", icon: LayoutDashboard },
   { href: ROUTES.PROVIDER_MENU, label: "My Menu", icon: UtensilsCrossed },
   { href: ROUTES.PROVIDER_ORDERS, label: "Orders", icon: ListOrdered },
+  { href: ROUTES.PROVIDER_SETUP, label: "Profile", icon: ChefHat },
+
 ];
 
 const ADMIN_LINKS = [

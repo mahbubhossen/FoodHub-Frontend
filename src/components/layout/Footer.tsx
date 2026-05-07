@@ -1,7 +1,13 @@
 import { ROUTES } from "@/constants";
 import { ChefHat } from "lucide-react";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import Link from "next/link";
+import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+
+const socialLinks = [
+  { icon: FaFacebook, href: "https://www.facebook.com/foodhub" },
+  { icon: FaTwitter, href: "https://twitter.com/foodhub" },
+  { icon: FaInstagram, href: "https://instagram.com/foodhub" },
+];
 
 export function Footer() {
   return (
@@ -22,14 +28,16 @@ export function Footer() {
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
               Connecting food lovers with the best local restaurants. Fresh
-              meals, fast delivery, and amazing flavors — delivered right to
+              meals, fast delivery, and amazing flavors - delivered right to
               your door.
             </p>
             <div className="flex items-center gap-3 mt-4">
-             {[FaFacebook, FaTwitter, FaInstagram].map((Icon, i) => (
+              {socialLinks.map(({ icon: Icon, href }, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary"
                 >
                   <Icon className="h-4 w-4" />

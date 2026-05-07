@@ -12,7 +12,7 @@ const ROLE_HOME: Record<string, string> = {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  console.log("🔵 PATH:", pathname);
+  // console.log("🔵 PATH:", pathname);
 
   // Let public paths and API/static through
   if (
@@ -27,17 +27,17 @@ export async function middleware(req: NextRequest) {
   // Fetch session from better-auth
 
   const session = await getSafeSession(req);
-  console.log("🟡 SESSION:", session);
+  // console.log("🟡 SESSION:", session);
 
   if (!session) {
-    console.log("🔴 NO SESSION → redirecting to login");
+    // console.log("🔴 NO SESSION → redirecting to login");
     const loginUrl = req.nextUrl.clone();
     loginUrl.pathname = "/login";
     return NextResponse.redirect(loginUrl);
   }
 
   const user = session?.user;
-  console.log("🟢 USER:", user);
+  // console.log("🟢 USER:", user);
 
   // Not logged in → redirect to login
   if (!user) {
@@ -47,7 +47,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  console.log("COOKIE:", req.headers.get("cookie"));
+  // console.log("COOKIE:", req.headers.get("cookie"));
 
   const role: string = user.role ?? "CUSTOMER";
 

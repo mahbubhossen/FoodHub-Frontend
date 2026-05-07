@@ -5,9 +5,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ROUTES } from "@/constants";
-import { CategoryService, MealService, ProviderService } from "@/services/api.services";
+import {
+  CategoryService,
+  MealService,
+  ProviderService,
+} from "@/services/api.services";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowRight, Clock, Search, Star, Truck, UtensilsCrossed } from "lucide-react";
+import {
+  ArrowRight,
+  Clock,
+  Search,
+  Star,
+  Truck,
+  UtensilsCrossed,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -37,8 +48,8 @@ export function HeroSection() {
               to Your Door
             </h1>
             <p className="mt-5 text-lg text-muted-foreground leading-relaxed">
-              Browse menus from top local restaurants, place your order in seconds,
-              and enjoy a fresh hot meal without leaving home.
+              Browse menus from top local restaurants, place your order in
+              seconds, and enjoy a fresh hot meal without leaving home.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" asChild className="gap-2 h-12 px-6">
@@ -55,11 +66,13 @@ export function HeroSection() {
             <div className="mt-10 flex gap-8">
               {[
                 { value: "500+", label: "Meals" },
-                { value: "50+",  label: "Restaurants" },
+                { value: "50+", label: "Restaurants" },
                 { value: "10k+", label: "Happy Customers" },
               ].map((s) => (
                 <div key={s.label}>
-                  <p className="text-2xl font-extrabold text-primary">{s.value}</p>
+                  <p className="text-2xl font-extrabold text-primary">
+                    {s.value}
+                  </p>
                   <p className="text-xs text-muted-foreground">{s.label}</p>
                 </div>
               ))}
@@ -78,14 +91,18 @@ export function HeroSection() {
                 <span className="text-xl">⭐</span>
                 <div>
                   <p className="text-xs font-semibold">4.9 Rating</p>
-                  <p className="text-[10px] text-muted-foreground">12k+ reviews</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    12k+ reviews
+                  </p>
                 </div>
               </div>
               <div className="absolute -left-6 bottom-16 rounded-xl bg-background p-3 shadow-lg border border-border/60 flex items-center gap-2">
                 <span className="text-xl">🚚</span>
                 <div>
                   <p className="text-xs font-semibold">Fast Delivery</p>
-                  <p className="text-[10px] text-muted-foreground">30 min avg</p>
+                  <p className="text-[10px] text-muted-foreground">
+                    30 min avg
+                  </p>
                 </div>
               </div>
             </div>
@@ -101,13 +118,21 @@ export function HeroSection() {
 export function CategoriesSection() {
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ["categories"],
-    queryFn:  CategoryService.getAll,
+    queryFn: CategoryService.getAll,
   });
 
   const ICONS: Record<string, string> = {
-    bengali: "🍛", burger: "🍔", pizza: "🍕", sushi: "🍣",
-    biryani: "🍚", pasta: "🍝", salad: "🥗", desserts: "🍰",
-    chicken: "🍗", seafood: "🦐", default: "🍽️",
+    bengali: "🍛",
+    burger: "🍔",
+    pizza: "🍕",
+    sushi: "🍣",
+    biryani: "🍚",
+    pasta: "🍝",
+    salad: "🥗",
+    desserts: "🍰",
+    chicken: "🍗",
+    seafood: "🦐",
+    default: "🍽️",
   };
 
   return (
@@ -137,7 +162,9 @@ export function CategoriesSection() {
                 <span className="text-2xl group-hover:scale-110 transition-transform duration-200">
                   {ICONS[cat.slug] ?? ICONS.default}
                 </span>
-                <span className="text-xs font-medium leading-tight line-clamp-1">{cat.name}</span>
+                <span className="text-xs font-medium leading-tight line-clamp-1">
+                  {cat.name}
+                </span>
               </Link>
             ))}
           </div>
@@ -152,7 +179,8 @@ export function CategoriesSection() {
 export function FeaturedMealsSection() {
   const { data, isLoading } = useQuery({
     queryKey: ["meals", "featured"],
-    queryFn:  () => MealService.getAll({ limit: 8, sortBy: "createdAt", sortOrder: "desc" }),
+    queryFn: () =>
+      MealService.getAll({ limit: 8, sortBy: "createdAt", sortOrder: "desc" }),
   });
 
   const meals = data?.data ?? [];
@@ -163,7 +191,9 @@ export function FeaturedMealsSection() {
         <div className="mb-10 flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold md:text-3xl">Featured Meals</h2>
-            <p className="mt-1 text-muted-foreground">Freshly added to our platform</p>
+            <p className="mt-1 text-muted-foreground">
+              Freshly added to our platform
+            </p>
           </div>
           <Button variant="ghost" asChild className="gap-1 text-primary">
             <Link href={ROUTES.MEALS}>
@@ -223,9 +253,18 @@ export function HowItWorksSection() {
   // Need import at top
   function ShoppingCart({ className }: { className?: string }) {
     return (
-      <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+      <svg
+        className={className}
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+        />
       </svg>
     );
   }
@@ -259,7 +298,9 @@ export function HowItWorksSection() {
                     </span>
                   </div>
                   <h3 className="mb-2 font-semibold">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {step.desc}
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -275,7 +316,7 @@ export function HowItWorksSection() {
 export function TopProvidersSection() {
   const { data, isLoading } = useQuery({
     queryKey: ["providers", "top"],
-    queryFn:  () => ProviderService.getAll({ limit: 6 }),
+    queryFn: () => ProviderService.getAll({ limit: 6 }),
   });
 
   const providers = data?.data ?? [];
@@ -286,7 +327,9 @@ export function TopProvidersSection() {
         <div className="mb-10 flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold md:text-3xl">Top Restaurants</h2>
-            <p className="mt-1 text-muted-foreground">Trusted providers on our platform</p>
+            <p className="mt-1 text-muted-foreground">
+              Trusted providers on our platform
+            </p>
           </div>
         </div>
 
@@ -306,7 +349,13 @@ export function TopProvidersSection() {
               >
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-emerald-500/20 text-2xl">
                   {p.logoUrl ? (
-                    <Image src={p.logoUrl} alt={p.restaurantName} width={56} height={56} className="rounded-full object-cover" />
+                    <Image
+                      src={p.logoUrl}
+                      alt={p.restaurantName}
+                      width={56}
+                      height={56}
+                      className="rounded-full object-cover"
+                    />
                   ) : (
                     "🍽️"
                   )}
@@ -319,11 +368,13 @@ export function TopProvidersSection() {
                     {p._count?.meals ?? 0} meals
                   </p>
                 </div>
-                <span className={`text-[10px] rounded-full px-2 py-0.5 font-medium ${
-                  p.isOpen
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                    : "bg-muted text-muted-foreground"
-                }`}>
+                <span
+                  className={`text-[10px] rounded-full px-2 py-0.5 font-medium ${
+                    p.isOpen
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
                   {p.isOpen ? "Open" : "Closed"}
                 </span>
               </Link>
@@ -339,32 +390,74 @@ export function TopProvidersSection() {
 
 export function TestimonialsSection() {
   const TESTIMONIALS = [
-    { name: "Ayesha R.",   rating: 5, text: "FoodHub made dinner so easy! The order tracking is amazing — I knew exactly when to expect my food.", avatar: "AR" },
-    { name: "Karim H.",    rating: 5, text: "As a provider, the platform is incredibly straightforward. My orders have doubled since joining FoodHub.", avatar: "KH" },
-    { name: "Priya S.",    rating: 5, text: "Huge variety of cuisines and everything arrives hot. The halal filter is a game-changer for me.", avatar: "PS" },
-    { name: "Tanvir M.",   rating: 4, text: "Great selection of restaurants I didn't even know existed in my area. FoodHub has become my go-to.", avatar: "TM" },
-    { name: "Nasrin B.",   rating: 5, text: "The UX is clean and intuitive. I had my first order placed in under 2 minutes!", avatar: "NB" },
-    { name: "Sabbir A.",   rating: 5, text: "Phenomenal experience from browsing to delivery. The review system keeps quality high.", avatar: "SA" },
+    {
+      name: "Ayesha R.",
+      rating: 5,
+      text: "FoodHub made dinner so easy! The order tracking is amazing — I knew exactly when to expect my food.",
+      avatar: "AR",
+    },
+    {
+      name: "Karim H.",
+      rating: 5,
+      text: "As a provider, the platform is incredibly straightforward. My orders have doubled since joining FoodHub.",
+      avatar: "KH",
+    },
+    {
+      name: "Priya S.",
+      rating: 5,
+      text: "Huge variety of cuisines and everything arrives hot. The halal filter is a game-changer for me.",
+      avatar: "PS",
+    },
+    {
+      name: "Tanvir M.",
+      rating: 4,
+      text: "Great selection of restaurants I didn't even know existed in my area. FoodHub has become my go-to.",
+      avatar: "TM",
+    },
+    {
+      name: "Nasrin B.",
+      rating: 5,
+      text: "The UX is clean and intuitive. I had my first order placed in under 2 minutes!",
+      avatar: "NB",
+    },
+    {
+      name: "Sabbir A.",
+      rating: 5,
+      text: "Phenomenal experience from browsing to delivery. The review system keeps quality high.",
+      avatar: "SA",
+    },
   ];
 
   return (
     <section className="py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4">
         <div className="mb-12 text-center">
-          <h2 className="text-2xl font-bold md:text-3xl">What Our Community Says</h2>
-          <p className="mt-2 text-muted-foreground">Real reviews from real foodies</p>
+          <h2 className="text-2xl font-bold md:text-3xl">
+            What Our Community Says
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Real reviews from real foodies
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
-            <Card key={i} className="border-border/60 hover:shadow-md transition-shadow">
+            <Card
+              key={i}
+              className="border-border/60 hover:shadow-md transition-shadow"
+            >
               <CardContent className="p-5">
                 <div className="flex gap-0.5 mb-3">
                   {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star key={j} className="h-4 w-4 fill-orange-400 text-orange-400" />
+                    <Star
+                      key={j}
+                      className="h-4 w-4 fill-orange-400 text-orange-400"
+                    />
                   ))}
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
+                <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                  &ldquo;{t.text}&rdquo;
+                </p>
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold">
                     {t.avatar}
@@ -396,7 +489,9 @@ export function CTASection() {
           <div className="relative grid gap-8 md:grid-cols-2 md:items-center">
             <div>
               <h2 className="text-3xl font-extrabold md:text-4xl leading-tight">
-                Ready to start your<br />food journey?
+                Ready to start your
+                <br />
+                food journey?
               </h2>
               <p className="mt-4 text-base text-primary-foreground/80 leading-relaxed">
                 Join thousands of food lovers and the best local restaurants.
@@ -405,7 +500,7 @@ export function CTASection() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Button
                   size="lg"
-                  variant="secondary"
+                  variant="outline"
                   asChild
                   className="bg-white text-primary hover:bg-white/90 h-12 px-6 font-semibold"
                 >
@@ -424,14 +519,16 @@ export function CTASection() {
 
             <div className="hidden md:flex justify-center">
               <div className="grid grid-cols-2 gap-3">
-                {["🍕", "🍱", "🍔", "🍣", "🥗", "🍝", "🍗", "🍰"].map((e, i) => (
-                  <div
-                    key={i}
-                    className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm text-3xl hover:scale-110 transition-transform"
-                  >
-                    {e}
-                  </div>
-                ))}
+                {["🍕", "🍱", "🍔", "🍣", "🥗", "🍝", "🍗", "🍰"].map(
+                  (e, i) => (
+                    <div
+                      key={i}
+                      className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm text-3xl hover:scale-110 transition-transform"
+                    >
+                      {e}
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           </div>

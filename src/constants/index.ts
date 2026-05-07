@@ -63,5 +63,4 @@ export const PROVIDER_ORDER_STATUS_TRANSITIONS: Record<string, string[]> = {
   CANCELLED: [],
 };
 
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000/api";
+export const API_BASE = "/api";

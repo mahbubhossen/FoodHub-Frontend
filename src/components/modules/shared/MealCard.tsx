@@ -21,7 +21,7 @@ interface MealCardProps {
 
 export function MealCard({ meal, showProvider = true }: MealCardProps) {
   const { data: session } = useSession();
-  const user = session?.user;
+  const user = session?.user as { role?: string } | undefined;
   const qc = useQueryClient();
 
   const { mutate: addToCart, isPending } = useMutation({

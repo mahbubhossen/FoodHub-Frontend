@@ -16,7 +16,7 @@ export async function getSafeSession(req: Request): Promise<BetterAuthSession> {
 
     const data = await res.json();
 
-    console.log("SESSION RESULT 👉", data);
+    // console.log("SESSION RESULT 👉", data);
 
     // ❌ no session case
     if (!data || !data.user) {
