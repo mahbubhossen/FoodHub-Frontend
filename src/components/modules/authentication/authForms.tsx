@@ -23,8 +23,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-
-
 // ─── Google Icon SVG ────────────────────────────────────────────────────────
 
 function GoogleIcon() {
@@ -66,7 +64,7 @@ type LoginValues = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const callbackUrl = params.get("callbackUrl") ?? "";
+  const callbackUrl = params.get("callbackUrl") ?? "localhost:3000/meals";
   const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
@@ -120,7 +118,7 @@ export function LoginForm() {
 
   const { data: session } = useSession();
 
-console.log("SESSION:", session);
+  console.log("SESSION:", session);
 
   return (
     <Card className="w-full max-w-md border-border/60 shadow-xl shadow-black/5">

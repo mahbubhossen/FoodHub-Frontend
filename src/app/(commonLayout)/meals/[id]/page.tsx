@@ -27,7 +27,7 @@ export default function MealDetailPage({
   const { id } = use(params);
   const [qty, setQty] = useState(1);
   const { data: session } = useSession();
-  const user = session?.user as any;
+  const user = session?.user;
   const qc = useQueryClient();
 
   const { data: meal, isLoading } = useQuery({
@@ -83,7 +83,7 @@ export default function MealDetailPage({
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-950/30 dark:to-orange-900/10">
+            <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-orange-100 to-orange-50 dark:from-orange-950/30 dark:to-orange-900/10">
               <span className="text-8xl">🍽️</span>
             </div>
           )}
@@ -145,38 +145,39 @@ export default function MealDetailPage({
           <Separator className="my-5" />
 
           {/* Add to cart */}
-          {user?.role === "CUSTOMER" && meal.isAvailable && (
-            <div className="flex items-center gap-3">
-              {/* Qty picker */}
-              <div className="flex items-center gap-2 rounded-lg border border-border p-1">
-                <button
-                  onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          {(user as { role?: string })?.role === "CUSTOMER" &&
+            meal.isAvailable && (
+              <div className="flex items-center gap-3">
+                {/* Qty picker */}
+                <div className="flex items-center gap-2 rounded-lg border border-border p-1">
+                  <button
+                    onClick={() => setQty((q) => Math.max(1, q - 1))}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                  >
+                    <Minus className="h-3.5 w-3.5" />
+                  </button>
+                  <span className="w-6 text-center text-sm font-semibold">
+                    {qty}
+                  </span>
+                  <button
+                    onClick={() => setQty((q) => q + 1)}
+                    className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+                <Button
+                  onClick={() => addToCart()}
+                  disabled={isPending}
+                  className="flex-1 gap-2 h-11"
                 >
-                  <Minus className="h-3.5 w-3.5" />
-                </button>
-                <span className="w-6 text-center text-sm font-semibold">
-                  {qty}
-                </span>
-                <button
-                  onClick={() => setQty((q) => q + 1)}
-                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                >
-                  <Plus className="h-3.5 w-3.5" />
-                </button>
+                  <ShoppingCart className="h-4 w-4" />
+                  {isPending
+                    ? "Adding…"
+                    : `Add to Cart — ${formatPrice(meal.price * qty)}`}
+                </Button>
               </div>
-              <Button
-                onClick={() => addToCart()}
-                disabled={isPending}
-                className="flex-1 gap-2 h-11"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                {isPending
-                  ? "Adding…"
-                  : `Add to Cart — ${formatPrice(meal.price * qty)}`}
-              </Button>
-            </div>
-          )}
+            )}
 
           {!meal.isAvailable && (
             <div className="rounded-lg bg-muted p-4 text-center text-sm text-muted-foreground">

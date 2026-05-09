@@ -33,6 +33,7 @@ import { toast } from "sonner";
 const NAV_LINKS = [
   { href: ROUTES.HOME, label: "Home" },
   { href: ROUTES.MEALS, label: "Browse Meals" },
+  { href: ROUTES.PROVIDERS, label: "Providers" },
 ];
 
 export function Navbar() {

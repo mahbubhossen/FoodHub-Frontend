@@ -7,6 +7,7 @@ export const ROUTES = {
   LOGIN: "/login",
   REGISTER: "/register",
   MEALS: "/meals",
+  PROVIDERS: "/providers",
   MEAL_DETAIL: (id: string) => `/meals/${id}`,
   PROVIDER_DETAIL: (id: string) => `/providers/${id}`,
   // Customer

@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { Search, SlidersHorizontal, X } from "lucide-react";
-import { MealService, CategoryService } from "@/services/api.services";
-import { MealCard } from "@/components/modules/shared/MealCard";
 import { PageLoader } from "@/components/modules/shared/LoadingSpinner";
+import { MealCard } from "@/components/modules/shared/MealCard";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -16,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
   SheetContent,
@@ -24,11 +20,159 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Label } from "@/components/ui/label";
+import { CategoryService, MealService } from "@/services/api.services";
+import { useQuery } from "@tanstack/react-query";
+import { Search, SlidersHorizontal, X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+
+type FilterPanelProps = {
+  categoryId: string;
+  setCategoryId: React.Dispatch<React.SetStateAction<string>>;
+
+  sortBy: string;
+  sortOrder: string;
+  setSortBy: React.Dispatch<React.SetStateAction<string>>;
+  setSortOrder: React.Dispatch<React.SetStateAction<string>>;
+
+  minPrice: string;
+  maxPrice: string;
+  setMinPrice: React.Dispatch<React.SetStateAction<string>>;
+  setMaxPrice: React.Dispatch<React.SetStateAction<string>>;
+
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+
+  hasFilters: boolean;
+  clearFilters: () => void;
+
+  categories: {
+    id: string;
+    name: string;
+  }[];
+};
+
+const FilterPanel = ({
+  categoryId,
+  setCategoryId,
+
+  sortBy,
+  sortOrder,
+  setSortBy,
+  setSortOrder,
+
+  minPrice,
+  maxPrice,
+  setMinPrice,
+  setMaxPrice,
+
+  setPage,
+
+  hasFilters,
+  clearFilters,
+
+  categories,
+}: FilterPanelProps) => (
+  <div className="space-y-5">
+    <div className="space-y-2">
+      <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Category
+      </Label>
+
+      <Select
+        value={categoryId || "all"}
+        onValueChange={(v) => {
+          setCategoryId(v === "all" ? "" : v);
+          setPage(1);
+        }}
+      >
+        <SelectTrigger className="bg-white dark:bg-zinc-950">
+          <SelectValue placeholder="All categories" />
+        </SelectTrigger>
+
+        <SelectContent className="bg-zinc-900 text-white">
+          <SelectItem value="all">All Categories</SelectItem>
+
+          {categories.map((c) => (
+            <SelectItem key={c.id} value={c.id}>
+              {c.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+
+    <div className="space-y-2">
+      <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Sort By
+      </Label>
+
+      <Select
+        value={`${sortBy}-${sortOrder}`}
+        onValueChange={(v) => {
+          const [s, o] = v.split("-");
+          setSortBy(s);
+          setSortOrder(o);
+        }}
+      >
+        <SelectTrigger className="bg-card">
+          <SelectValue />
+        </SelectTrigger>
+
+        <SelectContent className="bg-zinc-900 text-white">
+          <SelectItem value="createdAt-desc">Newest First</SelectItem>
+          <SelectItem value="createdAt-asc">Oldest First</SelectItem>
+          <SelectItem value="price-asc">Price: Low to High</SelectItem>
+          <SelectItem value="price-desc">Price: High to Low</SelectItem>
+          <SelectItem value="name-asc">Name: A to Z</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+
+    <div className="space-y-2">
+      <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+        Price Range
+      </Label>
+
+      <div className="flex gap-2">
+        <Input
+          placeholder="Min $"
+          value={minPrice}
+          onChange={(e) => {
+            setMinPrice(e.target.value);
+            setPage(1);
+          }}
+          type="number"
+          min={0}
+        />
+
+        <Input
+          placeholder="Max $"
+          value={maxPrice}
+          onChange={(e) => {
+            setMaxPrice(e.target.value);
+            setPage(1);
+          }}
+          type="number"
+          min={0}
+        />
+      </div>
+    </div>
+
+    {hasFilters && (
+      <Button
+        variant="outline"
+        className="w-full gap-1.5"
+        onClick={clearFilters}
+      >
+        <X className="h-4 w-4" />
+        Clear Filters
+      </Button>
+    )}
+  </div>
+);
 
 export default function MealsPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const [search, setSearch] = useState(searchParams.get("search") ?? "");
   const [categoryId, setCategoryId] = useState(
@@ -75,98 +219,6 @@ export default function MealsPage() {
 
   const hasFilters = !!(search || categoryId || minPrice || maxPrice);
 
-  const FilterPanel = () => (
-    <div className="space-y-5">
-      <div className="space-y-2">
-        <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Category
-        </Label>
-        <Select
-          value={categoryId || "all"}
-          onValueChange={(v) => {
-            setCategoryId(v === "all" ? "" : v);
-            setPage(1);
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="All categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((c) => (
-              <SelectItem key={c.id} value={c.id}>
-                {c.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Sort By
-        </Label>
-        <Select
-          value={`${sortBy}-${sortOrder}`}
-          onValueChange={(v) => {
-            const [s, o] = v.split("-");
-            setSortBy(s);
-            setSortOrder(o);
-          }}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="createdAt-desc">Newest First</SelectItem>
-            <SelectItem value="createdAt-asc">Oldest First</SelectItem>
-            <SelectItem value="price-asc">Price: Low to High</SelectItem>
-            <SelectItem value="price-desc">Price: High to Low</SelectItem>
-            <SelectItem value="name-asc">Name: A to Z</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="space-y-2">
-        <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Price Range
-        </Label>
-        <div className="flex gap-2">
-          <Input
-            placeholder="Min $"
-            value={minPrice}
-            onChange={(e) => {
-              setMinPrice(e.target.value);
-              setPage(1);
-            }}
-            type="number"
-            min={0}
-          />
-          <Input
-            placeholder="Max $"
-            value={maxPrice}
-            onChange={(e) => {
-              setMaxPrice(e.target.value);
-              setPage(1);
-            }}
-            type="number"
-            min={0}
-          />
-        </div>
-      </div>
-
-      {hasFilters && (
-        <Button
-          variant="outline"
-          className="w-full gap-1.5"
-          onClick={clearFilters}
-        >
-          <X className="h-4 w-4" /> Clear Filters
-        </Button>
-      )}
-    </div>
-  );
-
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
@@ -209,7 +261,22 @@ export default function MealsPage() {
               <SheetTitle>Filters</SheetTitle>
             </SheetHeader>
             <div className="mt-6">
-              <FilterPanel />
+              <FilterPanel
+                categoryId={categoryId}
+                setCategoryId={setCategoryId}
+                sortBy={sortBy}
+                sortOrder={sortOrder}
+                setSortBy={setSortBy}
+                setSortOrder={setSortOrder}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+                setMinPrice={setMinPrice}
+                setMaxPrice={setMaxPrice}
+                setPage={setPage}
+                hasFilters={hasFilters}
+                clearFilters={clearFilters}
+                categories={categories}
+              />
             </div>
           </SheetContent>
         </Sheet>
@@ -241,12 +308,27 @@ export default function MealsPage() {
 
       <div className="flex gap-8">
         {/* Desktop sidebar filters */}
-        <aside className="hidden md:block w-56 flex-shrink-0">
+        <aside className="hidden md:block w-56 shrink-0">
           <div className="sticky top-24 rounded-xl border border-border/60 bg-card p-5">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-primary" /> Filters
+              <SlidersHorizontal className="h-100w-4 text-primary" /> Filters
             </h3>
-            <FilterPanel />
+            <FilterPanel
+              categoryId={categoryId}
+              setCategoryId={setCategoryId}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+              setSortBy={setSortBy}
+              setSortOrder={setSortOrder}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              setMinPrice={setMinPrice}
+              setMaxPrice={setMaxPrice}
+              setPage={setPage}
+              hasFilters={hasFilters}
+              clearFilters={clearFilters}
+              categories={categories}
+            />
           </div>
         </aside>
 

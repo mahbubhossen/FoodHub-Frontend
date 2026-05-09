@@ -1,36 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { Plus, Pencil, Trash2, Loader2, UtensilsCrossed } from "lucide-react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "sonner";
-import { MealService, CategoryService } from "@/services/api.services";
-import { Meal } from "@/types";
-import { formatPrice } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
 import { PageLoader } from "@/components/modules/shared/LoadingSpinner";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,7 +12,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { cn, formatPrice } from "@/lib/utils";
+import { CategoryService, MealService } from "@/services/api.services";
+import { Meal } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2, Pencil, Plus, Trash2, UtensilsCrossed } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const mealSchema = z.object({
   name: z.string().min(2, "Name is required."),
@@ -59,7 +58,6 @@ type MealValues = z.infer<typeof mealSchema>;
 function MealForm({
   defaultValues,
   onSubmit,
-  isSubmitting,
 }: {
   defaultValues?: Partial<MealValues>;
   onSubmit: (v: MealValues) => void;
@@ -74,7 +72,6 @@ function MealForm({
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors },
   } = useForm<MealValues>({
     resolver: zodResolver(mealSchema),
@@ -141,7 +138,7 @@ function MealForm({
             >
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-red-50 dark:bg-red-900/30">
               {categories.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name}
@@ -303,7 +300,7 @@ export default function ProviderMenuPage() {
                     sizes="400px"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-orange-100 to-orange-50 dark:from-orange-950/30 dark:to-orange-900/10 text-4xl">
+                  <div className="flex h-full items-center justify-center bg-linear-to-br from-orange-100 to-orange-50 dark:from-orange-950/30 dark:to-orange-900/10 text-4xl">
                     🍽️
                   </div>
                 )}
@@ -325,7 +322,7 @@ export default function ProviderMenuPage() {
                   <p className="font-semibold text-sm leading-tight line-clamp-1">
                     {meal.name}
                   </p>
-                  <p className="text-sm font-bold text-primary flex-shrink-0">
+                  <p className="text-sm font-bold text-primary shrink-0">
                     {formatPrice(meal.price)}
                   </p>
                 </div>
