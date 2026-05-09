@@ -2,13 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const PUBLIC_PATHS = ["/", "/meals", "/login", "/register", "/providers"];
 
-const ROLE_HOME: Record<string, string> = {
-  ADMIN: "/admin",
-  PROVIDER: "/provider/dashboard",
-  CUSTOMER: "/orders",
-};
-
-export async function middleware(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Allow public routes
@@ -21,26 +15,24 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // ✅ EDGE SAFE SESSION CHECK (NO IMPORT)
+  // SAFE COOKIE CHECK (NO CRASH POSSIBLE)
+  const cookies = req.cookies;
+
   const sessionToken =
-    req.cookies.get("better-auth.session_token")?.value ||
-    req.cookies.get("session")?.value;
+    cookies.get("better-auth.session_token")?.value ||
+    cookies.get("session")?.value ||
+    cookies.get("auth_token")?.value;
 
-  // If no cookie → redirect login
   if (!sessionToken) {
-    const loginUrl = req.nextUrl.clone();
-    loginUrl.pathname = "/login";
-    loginUrl.searchParams.set("callbackUrl", pathname);
-    return NextResponse.redirect(loginUrl);
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("callbackUrl", pathname);
+    return NextResponse.redirect(url);
   }
-
-  // ⚠️ IMPORTANT:
-  // We CANNOT get role in middleware (Edge limitation)
-  // So we only allow access, role check stays in backend/pages
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|public/).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
